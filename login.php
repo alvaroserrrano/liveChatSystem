@@ -1,3 +1,25 @@
+<?php
+
+include ('./includes/dbh.inc.php');
+session_start();
+$message = '';
+if(isset($_SESSION['user_id'])){
+    header("Location: index.php");
+}
+
+if(isset($_POST['login'])){
+    $query = "SELECT * FROM login WHERE username = :username";
+    $statement = $connect->prepare($query);
+    $statement->execute(
+        array(
+            ':username' => $_POST["username"]
+        )
+        );
+}
+
+?>
+
+
 <html>  
     <head>  
         <title>Chat Application using PHP Ajax Jquery</title>  
@@ -16,18 +38,18 @@
             <div class="panel-heading">Chat Application Login</div>
             <div class="panel-body">
             <form method="post" action = "login.inc.php">
-            <p class="text-danger"><?php echo $message; ?></p>
-            <div class="form-group">
-            <label>Enter Username</label>
-            <input type="text" name="username" class="form-control" required />
-            </div>
-            <div class="form-group">
-            <label>Enter Password</label>
-            <input type="password" name="password" class="form-control" required />
-            </div>
-            <div class="form-group">
-            <input type="submit" name="login" class="btn btn-info" value="Login" />
-            </div>
+                <p class="text-danger"><?php echo $message; ?></p>
+                <div class="form-group">
+                    <label>Enter Username</label>
+                    <input type="text" name="username" class="form-control" required />
+                    </div>
+                <div class="form-group">
+                    <label>Enter Password</label>
+                    <input type="password" name="password" class="form-control" required />
+                    </div>
+                <div class="form-group">
+                    <input type="submit" name="login" class="btn btn-info" value="Login" />
+                </div>
             </form>
             </div>
         </div>
