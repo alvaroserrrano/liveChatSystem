@@ -15,8 +15,31 @@ if(isset($_POST['login'])){
             ':username' => $_POST["username"]
         )
         );
+        $count = $statement->rowCount();
+        if($count > 0 ){
+            $result = $statement->fetchAll();
+            foreach ($result as $row) {
+                if(password_verify($_POST['password'], $row['password'])){
+                    $_SESSION['user_id'] = $row['user_id'];
+                    $_SESSION['user_name'] = $row['user_name'];
+                    $sub_query = "
+                    INSERT INTO login_details 
+                    (user_id) 
+                    VALUES ('".$row['user_id']."')
+                    ";
+                    $statement = $connect->prepare($sub_query);
+                    $statement->execute();
+                    $_SESSION['login_details_id'] = $connect->lastInsertId();
+                    header("location:index.php");
+                }else{
+                    $message = "<label>Wrong password</label>";
+                }
+            }
+        }
+        else{
+            $message = "<label>Wrong Username</label>";
+        }
 }
-
 ?>
 
 
@@ -32,7 +55,7 @@ if(isset($_POST['login'])){
         <div class="container">
         <br />
         
-        <h3 align="center">Chat Application using PHP Ajax Jquery</a></h3><br />
+        <h3 style="text-align:center">Chat Application using PHP Ajax Jquery</a></h3><br />
         <br />
         <div class="panel panel-default">
             <div class="panel-heading">Chat Application Login</div>
